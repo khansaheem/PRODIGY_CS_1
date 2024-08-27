@@ -1,34 +1,32 @@
-def caesar_cipher(text, shift, mode):
-  """Encrypts or decrypts a given text using the Caesar Cipher algorithm.
-
-  Args:
-    text: The text to be encrypted or decrypted.
-    shift: The number of positions to shift the letters.
-    mode: The mode of operation, either 'encrypt' or 'decrypt'.
-
-  Returns:
-    The encrypted or decrypted text.
-  """
-
-  result = ""
-  # traverse text
-  for char in text:
-    # Encrypt this character
-    if char.isupper():
-      result += chr((ord(char) + shift - 65) % 26 + 65)
-    elif char.islower():
-      result += chr((ord(char) + shift - 97) % 26 + 97)
+def shift_character(char, shift):
+    if char.islower():
+        return chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+    elif char.isupper():
+        return chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
     else:
-      result += char
-  
-  if mode == 'decrypt':
-    shift = -shift
-    result = caesar_cipher(result, shift, 'encrypt')
+        return char
 
-  return result
+def caesar_cipher(text, shift, mode='encrypt'):
+    shift = shift % 26
+    if mode == 'decrypt':
+        shift = -shift
 
-text = input("Enter your message: ")
-shift = int(input("Enter the shift value (1-25): "))
-mode = input("Enter mode (encrypt/decrypt): ")
+    return ''.join(shift_character(char, shift) for char in text)
 
-print("The", mode, "ed text is:", caesar_cipher(text, shift, mode))
+def main():
+    print("Caesar Cipher Program")
+    choice = input("Do you want to (E)ncrypt or (D)ecrypt? ").strip().lower()
+
+    if choice in ['e', 'encrypt']:
+        message = input("Enter the message to encrypt: ")
+        shift = int(input("Enter the shift value: "))
+        print(f"Encrypted Message: {caesar_cipher(message, shift, 'encrypt')}")
+    elif choice in ['d', 'decrypt']:
+        message = input("Enter the message to decrypt: ")
+        shift = int(input("Enter the shift value: "))
+        print(f"Decrypted Message: {caesar_cipher(message, shift, 'decrypt')}")
+    else:
+        print("Invalid choice. Please enter 'E' to encrypt or 'D' to decrypt.")
+
+if __name__ == "__main__":
+    main()
